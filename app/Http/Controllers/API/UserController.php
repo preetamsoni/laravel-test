@@ -34,10 +34,7 @@ class UserController extends ApiController {
         
         $country = Country::where('country',$country)->get();
 
-         // echo "<pre>";
-         // print_r($country);
-
-         if(count($country) == 0) {
+        if(count($country) == 0) {
             return $this->respondWithArray([], ["Country does not exist"], 1,400);
          }
 
@@ -56,12 +53,7 @@ class UserController extends ApiController {
           unset($value['deleted_at']);
         }
        
-        // echo "<pre>";
-        // print_r(json_encode($company));
-
-        // return json_encode($company)
-        
-       return $this->respondWithArray(json_decode($company), ["Company List"], 0, 200, null);
+      return $this->respondWithArray(json_decode($company), ["Company List"], 0, 200, null);
         
     }
 
