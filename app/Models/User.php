@@ -28,9 +28,9 @@ class User extends Authenticatable {
       ];
 
     
-    public function company() {
-        return $this->hasMany('App\Models\Company', 'user_id', 'id');
-    }
+    // public function company() {
+    //     return $this->hasMany('App\Models\Company', 'user_id', 'id');
+    // }
 
   
     

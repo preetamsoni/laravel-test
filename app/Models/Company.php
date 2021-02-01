@@ -30,17 +30,17 @@ class Company extends Authenticatable {
       ];
 
     
-     public function user() {
-        return $this->hasMany('App\Models\User', 'company_id', 'id');
-    }
+    //  public function user() {
+    //     return $this->hasMany('App\Models\User', 'company_id', 'id');
+    // }
 
-     public function country() {
-        return $this->belongsTo('App\Models\Country','country_id','id');
-     }
+     // public function country() {
+     //    return $this->belongsTo('App\Models\Country','country_id','id');
+     // }
 
-     public function users() {
-        return $this->belongsTo('App\Models\User','user_id','id');
-     }
+     // public function users() {
+     //    return $this->belongsTo('App\Models\User','user_id','id');
+     // }
   
     
   }

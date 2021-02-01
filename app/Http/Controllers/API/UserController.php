@@ -10,12 +10,10 @@ use App\Models\Country;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Support\Facades\DB;
-use App\Http\Resources\UserResource;
 use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Hash;
-use App\Mail\LoginOtpMail;
 use Illuminate\Support\Facades\Mail;
 
 
@@ -38,16 +36,12 @@ class UserController extends ApiController {
             return $this->respondWithArray([], ["Country does not exist"], 1,400);
          }
 
-        $countryWiseCompany = Country::find($country[0]['id'])->company;
-        
-        $user = User::all();
-
-        $company = Company::where('country_id',$country[0]['id'])->get();
+       $company = Company::where('country_id',$country[0]['id'])->get();
 
 
         foreach ($company as $key => $value) {
-         $company->find($value['country_id'])->country;
-          $company->find($value['user_id'])->users;
+           $company[$key]['country'] = Country::find($value['country_id']);
+           $company[$key]['users'] = User::find($value['user_id']);
           unset($value['country_id']);
           unset($value['user_id']);
           unset($value['deleted_at']);
@@ -75,12 +69,11 @@ class UserController extends ApiController {
         
         $input = $this->request->all();
         
-
+        //-- Get FileName & FileSize---//
         $getFileName = $this->request->file('file_upload')->getClientOriginalName();
-
         $getFilesize = $this->request->file('file_upload')->getClientSize();
        
-      
+        //-- Find Filename and Filesize in database --//
         $fileUpload = FileUpload::where(['file_upload' => $getFileName, 'file_size' => $getFilesize])->get();
 
          if ($this->request->file('file_upload')) {

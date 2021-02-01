@@ -29,13 +29,13 @@ class Country extends Authenticatable {
       ];
 
     
-     public function company() {
-        return $this->hasMany('App\Models\Company', 'country_id', 'id');
-    }
+    //  public function company() {
+    //     return $this->hasMany('App\Models\Company', 'country_id', 'id');
+    // }
 
-    public function users() {
-        return $this->belongsToMany('App\Models\User', 'company');
-    }
+    // public function users() {
+    //     return $this->belongsToMany('App\Models\User', 'company');
+    // }
 
   
     
