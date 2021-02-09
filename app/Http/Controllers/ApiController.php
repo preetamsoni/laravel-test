@@ -56,9 +56,7 @@ class ApiController extends Controller
             'status' => $statusCode,
             'code' => $code,
             'message' => $this->filterArray($message),
-            'data' => $data,
-            'total_records' => $total_records,
-            'meta'=>$meta
+            'data' => $data
         );
         $headers[]=JSON_NUMERIC_CHECK;
         return response()->json($response, $statusCode, $headers);

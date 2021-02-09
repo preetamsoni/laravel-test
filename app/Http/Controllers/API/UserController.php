@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\FileUploadRequest;
 
 
 
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\Mail;
 class UserController extends ApiController {
 
     
-    public function __construct(Request $request) {
+    public function __construct(FileUploadRequest $request) {
 
         $this->request = $request;
     }
@@ -51,17 +52,9 @@ class UserController extends ApiController {
         
     }
 
-    public function fileUpload()
+    public function fileUpload(FileUploadRequest $request)
     {
-        $validator = Validator::make($this->request->all(), [
-                   'file_upload' => 'required|file|mimes:pdf|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->error(['message' => $validator->errors(), 'error' => 'BAD_REQUEST'], 422);
-        }
-
-      
+       
         $input = $this->request->all();
         
         //-- Get FileName & FileSize---//
