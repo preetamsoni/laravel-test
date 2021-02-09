@@ -53,55 +53,45 @@ class UserController extends ApiController {
 
     public function fileUpload()
     {
-
-         $validator = Validator::make($this->request->all(), [
-                    'file_upload' => 'required|file|mimes:pdf|max:2048',
+        $validator = Validator::make($this->request->all(), [
+                   'file_upload' => 'required|file|mimes:pdf|max:2048',
         ]);
 
         if ($validator->fails()) {
-            $errors = $validator->errors();
-            $error = array(
-                'file_upload' => $errors->first('file_upload'),
-                 );
-            return $this->respondWithArray([], $error, 1,422);
+            return $this->error(['message' => $validator->errors(), 'error' => 'BAD_REQUEST'], 422);
         }
 
-        
+      
         $input = $this->request->all();
         
         //-- Get FileName & FileSize---//
         $getFileName = $this->request->file('file_upload')->getClientOriginalName();
         $getFilesize = $this->request->file('file_upload')->getClientSize();
-       
+        $filename = $getFilesize . '_' . $getFileName;
+
         //-- Find Filename and Filesize in database --//
-        $fileUpload = FileUpload::where(['file_upload' => $getFileName, 'file_size' => $getFilesize])->get();
+        $fileUpload = FileUpload::where(['file_upload' => $filename, 'file_size' => $getFilesize])->get();
 
          if ($this->request->file('file_upload')) {
-              
+            
             if (count($fileUpload)>0) {
                if (File::exists(public_path('file_upload/' . $fileUpload[0]['file_upload']))) {
                    File::delete(public_path('file_upload/' . $fileUpload[0]['file_upload']));
                 }
-
-              $image =$this->request->file_upload;   
-              $filename = $getFileName;
-              Storage::disk('file_upload')->put($filename,base64_decode($image));
-                
-              $findFile = FileUpload::find($fileUpload[0]['id']);
-              $updateData = array('file_upload' =>  $filename,'file_size' => $getFilesize);
-              $findFile->update($updateData);
-              return $this->respondWithArray([], ["File Upload successfully updated"], 0);
-
-            } else {
-              $image =$this->request->file_upload;   
-              $filename = $getFileName;
-              Storage::disk('file_upload')->put($filename,base64_decode($image));
-              $createData = array('file_upload' =>  $filename,'file_size' => $getFilesize);
-              FileUpload::create($createData);
-              return $this->respondWithArray([], ["File Upload successfully created"], 0);
             }
-           
-         }
+
+              //-- File upload on file_upload folder---//
+              $image =$this->request->file_upload;   
+              Storage::disk('file_upload')->put($filename,base64_decode($image));
+
+
+             FileUpload::updateOrCreate(
+                      ['file_upload' => $filename, 'file_size' => $getFilesize],
+                      ['file_upload' =>  $filename,'file_size' => $getFilesize]
+                    );
+
+              return $this->respondWithArray([], ["File Upload successfully"], 0);
+          }
     }
  
    

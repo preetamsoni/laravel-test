@@ -102,6 +102,12 @@ class ApiController extends Controller
         return Hashids::encode($id);
     }
 
+    function error($error,$statusCode)
+    {
+        $error['status'] = 'error';
+        return response()->json($error, $statusCode);
+    }
+
     
 
 }
