@@ -23,23 +23,29 @@ use App\Http\Requests\FileUploadRequest;
 class UserController extends ApiController {
 
     
-    public function fetchAllUser($country) {
+    public function fetchAllUser() {
         
+        $country = 'Canada';
+
         $country = Country::where('country',$country)->get();
 
         if(count($country) == 0) {
             return $this->respondWithArray([], ["Country does not exist"], 1,400);
          }
 
-       $company = Company::where('country_id',$country[0]['id'])->get();
+       
+        $query = Company::query();
+        $query->orderBy('company.id','ASC');
+        $query->select(['company.company','country.country as country_name','user.name as User Name','user.created_at as date'])->leftJoin('country',function($join){
+            $join->on('company.country_id', '=', 'country.id');
+          });
+        $query->leftJoin('user',function($join){
+            $join->on('company.user_id', '=', 'user.id');
+          });
+        $query->where('company.country_id', '=', $country[0]['id']);
 
-        foreach ($company as $key => $value) {
-           $company[$key]['country'] = Country::find($value['country_id']);
-           $company[$key]['users'] = User::find($value['user_id']);
-          unset($value['country_id']);
-          unset($value['user_id']);
-          unset($value['deleted_at']);
-        }
+        $company = $query->get();
+
        
       return $this->respondWithArray(json_decode($company), ["Company List"], 0, 200, null);
         

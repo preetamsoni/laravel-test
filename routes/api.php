@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods:  POST, GET, OPTIONS, PUT, DELETE');
 header('Access-Control-Allow-Headers:  Content-Type, X-Auth-Token, Origin, Authorization, Accept');
-Route::get('fetchAllUser/{country_name}', 'API\UserController@fetchAllUser');
+Route::get('fetchAllUser', 'API\UserController@fetchAllUser');
 Route::post('fileUpload', 'API\UserController@fileUpload');
 
 
