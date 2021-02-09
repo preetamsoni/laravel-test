@@ -23,12 +23,6 @@ use App\Http\Requests\FileUploadRequest;
 class UserController extends ApiController {
 
     
-    public function __construct(FileUploadRequest $request) {
-
-        $this->request = $request;
-    }
-
-    
     public function fetchAllUser($country) {
         
         $country = Country::where('country',$country)->get();
@@ -38,7 +32,6 @@ class UserController extends ApiController {
          }
 
        $company = Company::where('country_id',$country[0]['id'])->get();
-
 
         foreach ($company as $key => $value) {
            $company[$key]['country'] = Country::find($value['country_id']);
@@ -54,7 +47,7 @@ class UserController extends ApiController {
 
     public function fileUpload(FileUploadRequest $request)
     {
-       
+        $this->request = $request;
         $input = $this->request->all();
         
         //-- Get FileName & FileSize---//
